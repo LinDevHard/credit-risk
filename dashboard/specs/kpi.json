@@ -1,0 +1,125 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "config": {
+    "font": "Inter, system-ui, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e",
+      "gridColor": "#ebeae6",
+      "domainColor": "#c9c8c2",
+      "tickColor": "#c9c8c2",
+      "labelFontSize": 11
+    },
+    "legend": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e"
+    },
+    "title": {
+      "color": "#0b0b0b",
+      "fontSize": 14,
+      "anchor": "start",
+      "fontWeight": 600
+    },
+    "bar": {
+      "cornerRadiusEnd": 4
+    }
+  },
+  "title": "Ключевые метрики на 01.10.2026 и изменение к 01.09.2026",
+  "data": {
+    "url": "data/v_metrics_change.json"
+  },
+  "transform": [
+    {
+      "calculate": "datum.kind == 'amount' ? format(datum.value_2026_10_01 / 1e9, ',.1f') + ' млрд ₸' : format(datum.value_2026_10_01, '.2%')",
+      "as": "value_txt"
+    },
+    {
+      "calculate": "datum.kind == 'amount' ? (datum.delta_rel >= 0 ? '▲ +' : '▼ ') + format(datum.delta_rel, '.1%') : (datum.delta_abs >= 0 ? '▲ +' : '▼ ') + format(datum.delta_abs * 100, '.2f') + ' п.п.'",
+      "as": "delta_txt"
+    },
+    {
+      "calculate": "datum.kind == 'amount' ? '01.09: ' + format(datum.value_2026_09_01 / 1e9, ',.1f') + ' млрд' : '01.09: ' + format(datum.value_2026_09_01, '.2%')",
+      "as": "base_txt"
+    }
+  ],
+  "facet": {
+    "field": "label",
+    "type": "nominal",
+    "sort": {
+      "field": "ord"
+    },
+    "title": null,
+    "header": {
+      "labelFontSize": 12,
+      "labelColor": "#52514e",
+      "labelAnchor": "start"
+    }
+  },
+  "columns": 6,
+  "spec": {
+    "width": 150,
+    "height": 70,
+    "layer": [
+      {
+        "mark": {
+          "type": "text",
+          "fontSize": 22,
+          "fontWeight": 600,
+          "align": "left",
+          "x": 0,
+          "y": 16
+        },
+        "encoding": {
+          "text": {
+            "field": "value_txt"
+          },
+          "color": {
+            "value": "#0b0b0b"
+          }
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "fontSize": 12,
+          "align": "left",
+          "x": 0,
+          "y": 44
+        },
+        "encoding": {
+          "text": {
+            "field": "delta_txt"
+          },
+          "color": {
+            "value": "#52514e"
+          }
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "fontSize": 11,
+          "align": "left",
+          "x": 0,
+          "y": 62
+        },
+        "encoding": {
+          "text": {
+            "field": "base_txt"
+          },
+          "color": {
+            "value": "#8a8984"
+          }
+        }
+      }
+    ]
+  },
+  "resolve": {
+    "scale": {
+      "x": "independent"
+    }
+  }
+}

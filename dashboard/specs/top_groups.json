@@ -1,0 +1,103 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "config": {
+    "font": "Inter, system-ui, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e",
+      "gridColor": "#ebeae6",
+      "domainColor": "#c9c8c2",
+      "tickColor": "#c9c8c2",
+      "labelFontSize": 11
+    },
+    "legend": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e"
+    },
+    "title": {
+      "color": "#0b0b0b",
+      "fontSize": 14,
+      "anchor": "start",
+      "fontWeight": 600
+    },
+    "bar": {
+      "cornerRadiusEnd": 4
+    }
+  },
+  "title": "Топ-10 групп связанных заёмщиков на 01.10.2026, доля портфеля",
+  "width": 640,
+  "height": {
+    "step": 20
+  },
+  "data": {
+    "url": "data/v_top_groups.json"
+  },
+  "transform": [
+    {
+      "filter": "datum.report_date == '2026-10-01'"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "group_id",
+      "type": "nominal",
+      "sort": {
+        "field": "rnk"
+      },
+      "title": null
+    },
+    "x": {
+      "field": "share",
+      "type": "quantitative",
+      "axis": {
+        "format": ".1%"
+      },
+      "title": null
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "color": "#2a78d6",
+        "cornerRadiusEnd": 4
+      },
+      "encoding": {
+        "tooltip": [
+          {
+            "field": "group_id",
+            "title": "Группа"
+          },
+          {
+            "field": "share",
+            "format": ".2%",
+            "title": "Доля"
+          },
+          {
+            "field": "exposure_kzt",
+            "format": ",.0f",
+            "title": "Остаток, ₸"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 4,
+        "fontSize": 11,
+        "color": "#52514e"
+      },
+      "encoding": {
+        "text": {
+          "field": "share",
+          "format": ".1%"
+        }
+      }
+    }
+  ]
+}

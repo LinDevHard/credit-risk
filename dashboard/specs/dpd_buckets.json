@@ -1,0 +1,109 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "config": {
+    "font": "Inter, system-ui, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e",
+      "gridColor": "#ebeae6",
+      "domainColor": "#c9c8c2",
+      "tickColor": "#c9c8c2",
+      "labelFontSize": 11
+    },
+    "legend": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e"
+    },
+    "title": {
+      "color": "#0b0b0b",
+      "fontSize": 14,
+      "anchor": "start",
+      "fontWeight": 600
+    },
+    "bar": {
+      "cornerRadiusEnd": 4
+    }
+  },
+  "title": "Структура портфеля по просрочке, млрд ₸",
+  "width": 640,
+  "height": 110,
+  "data": {
+    "url": "data/v_dpd_buckets.json"
+  },
+  "transform": [
+    {
+      "calculate": "datum.report_date == '2026-09-01' ? '01.09.2026' : '01.10.2026'",
+      "as": "date_label"
+    },
+    {
+      "calculate": "datum.portfolio_kzt / 1e9",
+      "as": "bn"
+    },
+    {
+      "calculate": "indexof(['0','1-30','31-90','90+'], datum.dpd_bucket)",
+      "as": "o"
+    }
+  ],
+  "mark": {
+    "type": "bar",
+    "stroke": "#fcfcfb",
+    "strokeWidth": 2,
+    "cornerRadiusEnd": 0
+  },
+  "encoding": {
+    "y": {
+      "field": "date_label",
+      "type": "nominal",
+      "title": null
+    },
+    "x": {
+      "field": "bn",
+      "type": "quantitative",
+      "stack": "zero",
+      "title": null
+    },
+    "order": {
+      "field": "o"
+    },
+    "color": {
+      "field": "dpd_bucket",
+      "type": "ordinal",
+      "title": "Просрочка, дней",
+      "scale": {
+        "domain": [
+          "0",
+          "1-30",
+          "31-90",
+          "90+"
+        ],
+        "range": [
+          "#cfe0f5",
+          "#86b2e6",
+          "#2a78d6",
+          "#123e73"
+        ]
+      },
+      "legend": {
+        "orient": "top"
+      }
+    },
+    "tooltip": [
+      {
+        "field": "date_label",
+        "title": "Дата"
+      },
+      {
+        "field": "dpd_bucket",
+        "title": "Просрочка"
+      },
+      {
+        "field": "bn",
+        "format": ",.1f",
+        "title": "млрд ₸"
+      }
+    ]
+  }
+}

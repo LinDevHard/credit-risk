@@ -1,0 +1,240 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "config": {
+    "font": "Inter, system-ui, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e",
+      "gridColor": "#ebeae6",
+      "domainColor": "#c9c8c2",
+      "tickColor": "#c9c8c2",
+      "labelFontSize": 11
+    },
+    "legend": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e"
+    },
+    "title": {
+      "color": "#0b0b0b",
+      "fontSize": 14,
+      "anchor": "start",
+      "fontWeight": 600
+    },
+    "bar": {
+      "cornerRadiusEnd": 4
+    }
+  },
+  "title": "Разрез по отрасли",
+  "data": {
+    "url": "data/v_breakdown.json"
+  },
+  "transform": [
+    {
+      "filter": "datum.dim == 'sector'"
+    },
+    {
+      "calculate": "datum.report_date == '2026-09-01' ? '01.09.2026' : '01.10.2026'",
+      "as": "date_label"
+    },
+    {
+      "calculate": "datum.portfolio_kzt / 1e9",
+      "as": "bn"
+    }
+  ],
+  "hconcat": [
+    {
+      "title": {
+        "text": "Портфель, млрд ₸",
+        "fontSize": 12,
+        "fontWeight": 400
+      },
+      "width": 280,
+      "height": {
+        "step": 13
+      },
+      "mark": {
+        "type": "bar",
+        "cornerRadiusEnd": 4
+      },
+      "encoding": {
+        "y": {
+          "field": "dim_value",
+          "type": "nominal",
+          "title": null,
+          "sort": {
+            "op": "sum",
+            "field": "portfolio_kzt",
+            "order": "descending"
+          }
+        },
+        "yOffset": {
+          "field": "date_label",
+          "sort": [
+            "01.09.2026",
+            "01.10.2026"
+          ]
+        },
+        "x": {
+          "field": "bn",
+          "type": "quantitative",
+          "title": null
+        },
+        "color": {
+          "field": "date_label",
+          "type": "nominal",
+          "title": "Дата среза",
+          "scale": {
+            "domain": [
+              "01.09.2026",
+              "01.10.2026"
+            ],
+            "range": [
+              "#a3a29c",
+              "#2a78d6"
+            ]
+          },
+          "legend": {
+            "orient": "top"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "dim_value",
+            "title": "Отрасль"
+          },
+          {
+            "field": "date_label",
+            "title": "Дата"
+          },
+          {
+            "field": "bn",
+            "format": ",.1f",
+            "title": "Портфель, млрд ₸"
+          },
+          {
+            "field": "par30",
+            "format": ".2%",
+            "title": "PAR30"
+          },
+          {
+            "field": "par90",
+            "format": ".2%",
+            "title": "PAR90"
+          },
+          {
+            "field": "npl",
+            "format": ".2%",
+            "title": "NPL"
+          }
+        ]
+      }
+    },
+    {
+      "title": {
+        "text": "NPL, доля портфеля сегмента",
+        "fontSize": 12,
+        "fontWeight": 400
+      },
+      "width": 280,
+      "height": {
+        "step": 26
+      },
+      "encoding": {
+        "y": {
+          "field": "dim_value",
+          "type": "nominal",
+          "title": null,
+          "sort": {
+            "op": "sum",
+            "field": "portfolio_kzt",
+            "order": "descending"
+          },
+          "axis": null
+        },
+        "x": {
+          "field": "npl",
+          "type": "quantitative",
+          "axis": {
+            "format": ".0%"
+          },
+          "title": null
+        }
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "line",
+            "color": "#c9c8c2",
+            "strokeWidth": 2
+          },
+          "encoding": {
+            "detail": {
+              "field": "dim_value"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "point",
+            "filled": true,
+            "size": 90,
+            "opacity": 1
+          },
+          "encoding": {
+            "color": {
+              "field": "date_label",
+              "type": "nominal",
+              "title": "Дата среза",
+              "scale": {
+                "domain": [
+                  "01.09.2026",
+                  "01.10.2026"
+                ],
+                "range": [
+                  "#a3a29c",
+                  "#2a78d6"
+                ]
+              },
+              "legend": {
+                "orient": "top"
+              }
+            },
+            "tooltip": [
+              {
+                "field": "dim_value",
+                "title": "Отрасль"
+              },
+              {
+                "field": "date_label",
+                "title": "Дата"
+              },
+              {
+                "field": "bn",
+                "format": ",.1f",
+                "title": "Портфель, млрд ₸"
+              },
+              {
+                "field": "par30",
+                "format": ".2%",
+                "title": "PAR30"
+              },
+              {
+                "field": "par90",
+                "format": ".2%",
+                "title": "PAR90"
+              },
+              {
+                "field": "npl",
+                "format": ".2%",
+                "title": "NPL"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

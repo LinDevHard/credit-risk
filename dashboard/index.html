@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Риск-сводка портфеля</title>
+<script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+<style>
+  :root { --surface: #fcfcfb; --ink: #0b0b0b; --muted: #52514e; --line: #ebeae6; }
+  body { margin: 0; background: var(--surface); color: var(--ink);
+         font: 14px/1.45 Inter, system-ui, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  section { border-top: 1px solid var(--line); padding: 18px 0; overflow-x: auto; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 0; }
+  .err { color: #b3261e; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Риск-сводка кредитного портфеля</h1>
+  <p class="sub">Срезы 01.09.2026 и 01.10.2026 · суммы в тенге по курсу на дату среза · без списанных кредитов ·
+    источник: <code>reporting.*</code></p>
+  <section id="kpi"></section>
+  <section id="dynamics"></section>
+  <section id="dpd_buckets"></section>
+  <section id="by_sector"></section>
+  <section id="by_program"></section>
+  <section id="top_groups"></section>
+</main>
+<script>
+  // Каждая секция рисует одноимённую спеку из specs/. Данные — data/*.json (выгрузка из Postgres).
+  for (const el of document.querySelectorAll('section[id]')) {
+    vegaEmbed(el, `specs/${el.id}.json`, { actions: { export: true, source: true, editor: true, compiled: false } })
+      .catch(e => { el.innerHTML = `<p class="err">${el.id}: ${e.message}</p>`; });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "config": {
+    "font": "Inter, system-ui, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e",
+      "gridColor": "#ebeae6",
+      "domainColor": "#c9c8c2",
+      "tickColor": "#c9c8c2",
+      "labelFontSize": 11
+    },
+    "legend": {
+      "labelColor": "#52514e",
+      "titleColor": "#52514e"
+    },
+    "title": {
+      "color": "#0b0b0b",
+      "fontSize": 14,
+      "anchor": "start",
+      "fontWeight": 600
+    },
+    "bar": {
+      "cornerRadiusEnd": 4
+    }
+  },
+  "title": "Динамика риск-метрик: 01.09 → 01.10.2026, доля портфеля",
+  "width": 640,
+  "height": 200,
+  "data": {
+    "url": "data/v_metrics_change.json"
+  },
+  "transform": [
+    {
+      "filter": "datum.kind == 'pct'"
+    },
+    {
+      "fold": [
+        "value_2026_09_01",
+        "value_2026_10_01"
+      ],
+      "as": [
+        "col",
+        "value"
+      ]
+    },
+    {
+      "calculate": "datum.col == 'value_2026_09_01' ? '01.09.2026' : '01.10.2026'",
+      "as": "date_label"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "label",
+      "type": "nominal",
+      "sort": {
+        "field": "ord"
+      },
+      "title": null
+    },
+    "x": {
+      "field": "value",
+      "type": "quantitative",
+      "axis": {
+        "format": ".0%"
+      },
+      "title": null
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "color": "#c9c8c2",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "detail": {
+          "field": "label"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 110,
+        "opacity": 1
+      },
+      "encoding": {
+        "color": {
+          "field": "date_label",
+          "type": "nominal",
+          "title": "Дата среза",
+          "scale": {
+            "domain": [
+              "01.09.2026",
+              "01.10.2026"
+            ],
+            "range": [
+              "#a3a29c",
+              "#2a78d6"
+            ]
+          },
+          "legend": {
+            "orient": "top"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "label",
+            "title": "Метрика"
+          },
+          {
+            "field": "date_label",
+            "title": "Дата"
+          },
+          {
+            "field": "value",
+            "format": ".2%",
+            "title": "Значение"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.col == 'value_2026_10_01'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": -12,
+        "fontSize": 11,
+        "color": "#0b0b0b"
+      },
+      "encoding": {
+        "text": {
+          "field": "value",
+          "format": ".1%"
+        }
+      }
+    }
+  ]
+}
